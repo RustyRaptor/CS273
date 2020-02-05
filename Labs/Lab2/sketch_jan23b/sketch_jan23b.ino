@@ -1,4 +1,3 @@
-
 //
 // Declare the things that exist in our assembly code
 //
@@ -11,8 +10,9 @@ extern "C" {
 }
 */
 
-extern byte x1, x2, x3;
-extern "C" void addition(void);
+
+extern byte x1, x2, x3; // import x1 x2 x3
+extern "C" void addition(void); // import the addition program as a function
 
 //
 // function to read a 2-digit decimal value from user
@@ -20,16 +20,21 @@ extern "C" void addition(void);
 byte read2DigitValue()
 {
   byte inch; int val;
-  Serial.println("Enter a 2-digit decimal value:");
-  while (!Serial.available()) delay(100);
-  inch = Serial.read();
-  val = (inch - '0') * 10;
-  while (!Serial.available()) delay(100);
-  inch = Serial.read();
+  Serial.println("Enter a 2-digit decimal value:"); 
+  
+  while (!Serial.available()) delay(100); // Wait for the user to enter something 
+  
+  inch = Serial.read(); // As soon as they do read what they entered
+  
+  val = (inch - '0') * 10; 
+  
+  while (!Serial.available()) delay(100); // Do it again for the next digit
+  
+  inch = Serial.read(); // read what the digit is
   val += (inch - '0');
-  Serial.print("The value entered is ");
-  Serial.println(val,DEC);
-  return (byte) val;
+  Serial.print("The value entered is "); 
+  Serial.println(val,DEC); // print out the value they entered
+  return (byte) val; 
 }
 
 //
@@ -37,20 +42,23 @@ byte read2DigitValue()
 //
 void setup()
 {
+  pinMode(13, OUTPUT); // set the LED to be automatically off
+  digitalWrite(13, LOW); 
+
   //
   // Initialize serial communications
   //
-  Serial.begin(9600);
+  Serial.begin(9600); // Start listening on the Serial console
   //
   // Read three values from user, store in global vars
   //
-  x1 = read2DigitValue();
+  x1 = read2DigitValue(); // read 2 digit values into each memory address
   x2 = read2DigitValue();
   x3 = read2DigitValue();
   //
   // Call our assembly code
   //
-  addition();
+  addition(); 
   //
   // print out value of x2 variable
   Serial.println("After addition()");
@@ -63,6 +71,7 @@ void setup()
 //
 void loop()
 {
-  delay(20000); // 20,000 millisecs == 20 seconds
+  // prints a * every 20 seconds for some reason
+  delay(20000); // 20,000 millisecs == 20 seconds 
   Serial.println("*");
 }
