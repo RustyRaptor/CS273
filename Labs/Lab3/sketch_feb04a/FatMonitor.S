@@ -1,34 +1,172 @@
 
-    .file "FatMonitor.S"
+.file "FatMonitor.S"
+.data
+.comm BLINK, 1
+.comm BVECTOR, 1
+.comm gender, 1
+.global gender
+.comm age, 1
+.global age
+.comm fat, 1
+.global fat
 
-    .data
-    .comm gender, 1
-    .global gender
-    .comm age, 1
-    .global age
-    .comm fat, 1
-    .global fat
-    
-    .text
-    .global lightup       // export the program to be used in the sketch
+.text
+.global lightup     // export the program to be used in the sketch
+
+
 lightup:
-      ldi r18, 0b00110001 // ALL
-      ldi r19, 0b00000001 // GREEN
-      ldi r20, 0b00010000 // BLUE
-      ldi r21, 0b00100000 // RED
-      lds r22, gender     // Load Gender
-      lds r23, age        // Load Age
-      lds r24, fat        // load fat
-      // Male or Female
-      CPI r22, 0x01
-      breq male:
+        ldi r16, 1
+        ldi r17, 0b00000000 // OFF ALL
+        ldi r18, 0b00110001 // ALL
+        ldi r19, 0b00000001 // RED
+        ldi r20, 0b00010000 // BLUE
+        ldi r21, 0b00100000 // GREEN
+        lds r22, gender     // Load Gender
+        lds r23, age        // Load Age
+        lds r24, fat        // load fat
+        sts BVECTOR, r17
+        sts BLINK, r16
+        // Male or Female
+        CPI r22, 0x01
+        brlt female
+        jmp male
 
-      // If Female
-female:
-       
-      // If Male
-male:
-      out 0x04, r18
-      out 0x05, r18
-      ret               // END
-    
+
+
+female: // If Female
+        cpi r23, 20
+        brlt leds
+        jmp f20
+
+f20:
+        cpi r23, 40
+        brlt ft20
+        jmp f40
+
+ft20:
+        cpi r24, 21
+        brlt low
+        cpi r24, 33
+        brlt normal
+        cpi r24, 39
+        brlt high
+        jmp vhigh
+
+f40:
+        cpi r23, 60
+        brlt ft40
+        jmp f60
+
+ft40:
+        cpi r24, 23
+        brlt low
+        cpi r24, 34
+        brlt normal
+        cpi r24, 40
+        brlt high
+        jmp vhigh
+        f60:
+        cpi r23, 79
+        brlt ft60
+        jmp fin
+
+ft60:
+        cpi r24, 24
+        brlt low
+        cpi r24, 36
+        brlt normal
+        cpi r24, 42
+        brlt high
+        jmp fin
+
+low:
+        sts BVECTOR, r20
+        jmp leds
+normal:
+        sts BVECTOR, r21
+        jmp leds
+high:
+        sts BVECTOR, r19
+        jmp leds
+vhigh:
+        sts BVECTOR, r18
+        sts BLINK, r17
+        jmp leds
+leds:
+
+        lds r25, BVECTOR
+        lds r26, BLINK
+        out 0x04, r25
+        out 0x05, r25
+        cpi r26, 1
+        brlt fin
+        jmp fin
+male: // If Male
+        cpi r23, 20
+        brlt leds
+        jmp m20
+
+m20:
+        cpi r23, 40
+        brlt mt20
+        jmp m40
+
+mt20:
+        cpi r24, 8
+        brlt low
+        cpi r24, 20
+        brlt normal
+        cpi r24, 25
+        brlt high
+        jmp vhigh
+
+m40:
+        cpi r23, 60
+        brlt mt40
+        jmp m60
+
+mt40:
+        cpi r24, 11
+        brlt low
+        cpi r24, 22
+        brlt normal
+        cpi r24, 28
+        brlt high
+        jmp vhigh
+
+m60:
+        cpi r23, 79
+        brlt mt60
+        jmp fin
+  
+mt60:
+        cpi r24, 13
+        brlt low
+        cpi r24, 25
+        brlt normal
+        cpi r24, 30
+        brlt high
+        jmp vhigh
+
+
+
+
+off:
+        ldi    r20, 0x04  // Store 4 (multiplies the delay by 4)
+dl0:    ldi    r18, 0xff  // Store 255 (multiplies by 255)
+dl1:    ldi    r19, 0xff  // Also multiplies by 255
+dl2:    nop
+nop
+nop
+nop               // No-Op for wait
+dec     r19        // decrement the last 255
+brne    dl2        // loops back until r19 reaches 0
+dec     r18        // decrement the second 255
+brne    dl1        // loop back until r18 is 0
+dec     r20        // decrease the 4
+brne    dl0        // once we finish 4 times we continue
+
+ldi     r17, 0x00  // change the 32 to 0 (sets the LED to off)
+out     0x05, r17  // Output the 0 on port B (Led off)
+fin:
+ret

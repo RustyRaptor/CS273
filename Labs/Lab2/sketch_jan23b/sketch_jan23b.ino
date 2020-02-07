@@ -20,20 +20,26 @@ extern "C" void addition(void); // import the addition program as a function
 byte read2DigitValue()
 {
   byte inch; int val;
-  Serial.println("Enter a 2-digit decimal value:"); 
+  Serial.println("Enter a 2-digit hexadecimal value:"); 
   
   while (!Serial.available()) delay(100); // Wait for the user to enter something 
   
   inch = Serial.read(); // As soon as they do read what they entered
-  
-  val = (inch - '0') * 10; 
+  if (inch >= '0' && inch <= '9') val = (inch - '0') * 16;
+  else if (inch >= 'a' && inch <= 'f') val = (inch - 'a' + 10) * 16;
+  else if (inch >= 'A' && inch <='F') val = (inch - 'A' + 10) * 16;
+   
   
   while (!Serial.available()) delay(100); // Do it again for the next digit
   
   inch = Serial.read(); // read what the digit is
-  val += (inch - '0');
-  Serial.print("The value entered is "); 
-  Serial.println(val,DEC); // print out the value they entered
+  if (inch >= '0' && inch <= '9') val += (inch - '0');
+  else if (inch >= 'a' && inch <= 'f') val += (inch - 'a' + 10);
+  else if (inch >= 'A' && inch <='F') val += (inch - 'A' + 10);
+  Serial.print("The hex value entered is "); 
+  Serial.println(val,HEX); // print out the value they entered
+  Serial.print("It's decimal value is ");
+  Serial.println(val,DEC);
   return (byte) val; 
 }
 
