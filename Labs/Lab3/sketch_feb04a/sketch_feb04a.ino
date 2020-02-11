@@ -51,7 +51,7 @@ void setup()
   //
   // Read 2 values from user, store in global vars
   //
-  Serial.println("Enter 00 for Male, 01 for Female");
+  Serial.println("Enter 00 for Female, 01 for Male");
   gender = read2DigitHexValue();
   Serial.println("Enter the age in Hex");
   age = read2DigitHexValue();
