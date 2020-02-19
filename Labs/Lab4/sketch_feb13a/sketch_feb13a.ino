@@ -30,38 +30,46 @@ void flashGoAggies()
   goaggies();
 }
 
-//void decodeMorse(const String & string, char message[])
-//{
-//  // Write your code below.
-//  // string contains the input binary string separated by single spaces
-//  // message contains the decoded English characters and numbers    
-//  // You will call the assembly function decode_morse()
-//}
+void decodeMorse(const String & string, char message[])
+{
+  // Write your code below.
+  // string contains the input binary string separated by single spaces
+  // message contains the decoded English characters and numbers    
+  // You will call the assembly function decode_morse()
+  int l = strlen(message[0]);
+  byte * pch
+  pch = strtok ( str, " ");
+  while (pch != NULL) {
+    val = pch;
+    width = pch
+  }
+  
+}
 
 
 
-//void decodeMorse() 
-//{
-//  Serial.println("Input a Morse code string (separate the code for characters by a space):");
-//
-//  while (!Serial.available()) delay(100);
-//  String string = Serial.readString();
-//
-//  Serial.print("The Morse code string is: ");
-//  Serial.println(string);
-//
-//  string = "1000 100 0"; // "01 1000";
-//  char message[100];
-//
-//  decodeMorse(string, message);
-//
-//  if(strlen(message) > 0) {
-//    Serial.print("The decoded message is: ");
-//    Serial.println(message);
-//  } else {
-//    Serial.print("Failure in decoding the input Morse code\n");
-//  }  
-//}
+void decodeMorse() 
+{
+  Serial.println("Input a Morse code string (separate the code for characters by a space):");
+
+  while (!Serial.available()) delay(100);
+  String string = Serial.readString();
+
+  Serial.print("The Morse code string is: ");
+  Serial.println(string);
+
+  string = "1000 100 0"; // "01 1000";
+  char message[100];
+
+  decodeMorse(string, message);
+
+  if(strlen(message) > 0) {
+    Serial.print("The decoded message is: ");
+    Serial.println(message);
+  } else {
+    Serial.print("Failure in decoding the input Morse code\n");
+  }  
+}
 
 void setup() {
   //
@@ -69,9 +77,9 @@ void setup() {
   //
   Serial.begin(9600);
 
-  flashGoAggies();
+//  flashGoAggies();
 
-//  decodeMorse();
+  decodeMorse();
   
 }
 
