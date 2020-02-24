@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>CS273 HW 4 - Ziad Arafat</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body class="vscode-light">
+        <h1 id="cs273-hw-4---ziad-arafat">CS273 HW 4 - Ziad Arafat</h1>
+<ol>
+<li>
+<p>The instructions are</p>
+<ol>
+<li>LDI R28, lo8(0x33A0)</li>
+<li>LDI R29, hi8(0x33A0)</li>
+</ol>
+</li>
+<li>
+<p>To keep different pieces of code or functions from interfering with each other. We are storing their values so we can retreive them later for another function that was using them.</p>
+</li>
+<li>
+<p>Each character is 1 byte so we should just find them in the even registers.</p>
+<ul>
+<li>So 'm' 'o' 'o' 'n' will be in r24, r22, r20, r18 respectively.</li>
+</ul>
+</li>
+<li>
+<p>A microcontroller has I/O and memory components on-board whereas a CPU does not. A CPU needs to be plugged into a board which provides those components.</p>
+<ul>
+<li>The AVR is a microcontroller because it has I/O and memory on board.</li>
+</ul>
+</li>
+<li>
+<p>16 bits on ours</p>
+</li>
+<li>
+<p>It's I/O Address is 0x3f so simply</p>
+<ul>
+<li>IN R18, 0x3f</li>
+</ul>
+</li>
+<li>
+<p>Since the PC will increment before branching it will need to be calculated from the next line: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2002</mn><mo>−</mo><mn>2005</mn><mo>=</mo><mo>−</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">2002 - 2005 = -3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mord">0</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mord">0</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">−</span><span class="mord">3</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2007</mn><mo>−</mo><mn>2006</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2007 - 2006 = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mord">0</span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mord">0</span><span class="mord">6</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></p>
+<ol>
+<li>for the first it's 1111111</li>
+<li>for the second it's 0000001</li>
+</ol>
+</li>
+<li>
+<p>the value stored should be 16</p>
+<ol>
+<li>first we increment it until it is 15</li>
+<li>then we skip that decrement and increment it one more time.</li>
+</ol>
+</li>
+</ol>
+
+    </body>
+    </html>
