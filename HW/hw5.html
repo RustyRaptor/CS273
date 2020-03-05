@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>CS273 HW 5 - Ziad Arafat</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="cs273-hw-5---ziad-arafat">CS273 HW 5 - Ziad Arafat</h1>
+<ol>
+<li>
+<p>Without a status register we can't check if the last operation was a zero or negative or positive or overflow etc. So operations like Branching that rely on the specific results of the previous math operation or comparison won't work making most logic near impossible.</p>
+</li>
+<li>
+<p>CZVSN</p>
+<ol>
+<li>S:1, C:1, Z:0, V:0, H:1, N:1</li>
+<li>S:0, C:1, Z:0, V:0, H:1, N:0</li>
+</ol>
+</li>
+<li>
+<p>R1, R0</p>
+<ol>
+<li>R1: 0xfa, R0: 0x05</li>
+<li>R1: 0x00, R0: 0x80</li>
+<li>R1: 0x8b, R0: 0xBA</li>
+</ol>
+</li>
+<li>
+<p>CODE:</p>
+</li>
+</ol>
+<pre><code class="language-c"><div>
+; POS/POS: <span class="hljs-number">3</span> <span class="hljs-number">1</span>
+; NEG/POS:<span class="hljs-number">-3</span> <span class="hljs-number">-1</span>
+; POS/NEG:<span class="hljs-number">-3</span> <span class="hljs-number">1</span>
+; NEG/NEG: <span class="hljs-number">3</span> <span class="hljs-number">-1</span>
+; R16 numerator
+; R17 denomonator
+; R18 Case: <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>
+; R22 Quotient
+; R20 Remainder
+
+.text
+
+divide:
+	lds R16, A <span class="hljs-comment">// load numerator</span>
+	lds R17, B <span class="hljs-comment">// load denomonator</span>
+	clr R18    <span class="hljs-comment">// set case to 0</span>
+
+isnumneg: <span class="hljs-comment">// is the numerator negative?</span>
+	cpi R16, <span class="hljs-number">0</span>
+	brlt numneg <span class="hljs-comment">// it is!</span>
+	jmp isdenomneg
+
+numneg: <span class="hljs-comment">// The numberator is negative</span>
+	neg R16
+	ldi R18, <span class="hljs-number">1</span> <span class="hljs-comment">// set case to 1</span>
+	jmp isdenomneg <span class="hljs-comment">// is the denom negative?</span>
+
+isdenomneg: <span class="hljs-comment">// is denom negative?</span>
+	cpi R17, <span class="hljs-number">0</span>
+	brlt denomneg <span class="hljs-comment">// IT IS</span>
+	cpi R18, <span class="hljs-number">1</span>    <span class="hljs-comment">// check if we were in case 1</span>
+	breq posneg   <span class="hljs-comment">// if we were then it's posneg</span>
+	jmp pospos    <span class="hljs-comment">// otherwise it was pospos</span>
+
+denomneg:
+	neg R17
+	cpi R18, <span class="hljs-number">0</span>    <span class="hljs-comment">// are we in case 0?</span>
+	breq negpos   <span class="hljs-comment">// If so then it's negpos</span>
+	jmp negneg    <span class="hljs-comment">// else it's negneg</span>
+	
+
+<span class="hljs-comment">// here we make sure our case is set then jump to division. </span>
+pospos:
+	ldi R18, <span class="hljs-number">0</span>
+	jmp division
+negpos:
+	ldi R18, <span class="hljs-number">1</span>
+	jmp division
+posneg:
+	ldi R18, <span class="hljs-number">2</span>
+	jmp division
+negneg:
+	ldi R18, <span class="hljs-number">3</span>
+	jmp division
+
+division:
+	lds R20, R16
+	lds R21, R17
+	clr R22
+L1:
+	inc R22
+	sub R20, R21
+	brcc L1
+
+	dec R22
+	add R20, R21
+
+<span class="hljs-comment">// check the case and negate the quotient/remainder accordingly.</span>
+chkcase:
+	cpi R18, <span class="hljs-number">0</span>
+	breq case0
+	cpi R18, <span class="hljs-number">1</span>
+	breq case1
+	cpi R18, <span class="hljs-number">2</span>
+	breq case2
+	cpi R18, <span class="hljs-number">3</span>
+	breq case3
+
+; POS/POS: <span class="hljs-number">3</span> <span class="hljs-number">1</span>
+; NEG/POS:<span class="hljs-number">-3</span> <span class="hljs-number">-1</span>
+; POS/NEG:<span class="hljs-number">-3</span> <span class="hljs-number">1</span>
+; NEG/NEG: <span class="hljs-number">3</span> <span class="hljs-number">-1</span>
+case0:
+	jmp done
+case1:
+	neg R22
+	neg R20
+	jmp done
+case2:
+	neg R22
+	jmp done
+case3:
+	neg R20
+
+done:
+	ret
+
+</div></code></pre>
+<ol start="5">
+<li>CODE:</li>
+</ol>
+<pre><code class="language-c"><div>; R18: x
+; R19: y
+; R20: <span class="hljs-number">2</span>
+; R21: <span class="hljs-number">5</span>
+; R22: <span class="hljs-number">7</span>
+
+conditionals:
+	ldi R18, <span class="hljs-number">5</span>
+	ldi R19, <span class="hljs-number">-5</span>
+
+	cp R18, R19
+	breq elseif
+	cp R18, R19
+	breq
+
+
+	cp R19, R18
+	brlt <span class="hljs-keyword">if</span>
+	dec R19
+	dec R19
+	dec R19
+	cp R19, R18
+	brlt elseif
+	jmp <span class="hljs-keyword">else</span>
+
+<span class="hljs-keyword">if</span>:
+	ldi R20, <span class="hljs-number">2</span>
+	add R18, R20
+	lds R19, R18
+	jmp done
+elseif:
+	ldi R21, <span class="hljs-number">5</span>
+	add R18, R21
+	lds R19, R18
+	jmp done
+<span class="hljs-keyword">else</span>:
+	ldi R22, <span class="hljs-number">7</span>
+	add R18, R22
+	lds R19, R18
+
+done:
+	ret
+</div></code></pre>
+
+    </body>
+    </html>
