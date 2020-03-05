@@ -2,7 +2,7 @@ extern byte val;
 extern byte width;
 extern byte ascii;
 
-extern "C" { 
+extern "C" {
   void decode_morse();
   void goaggies();
 }
@@ -21,34 +21,48 @@ byte read2DigitValue()
   inch = Serial.read();
   val += (inch - '0');
   Serial.print("The value entered is ");
-  Serial.println(val,DEC);
+  Serial.println(val, DEC);
   return (byte) val;
 }
 
-void flashGoAggies() 
+void flashGoAggies()
 {
-  goaggies();
+  Serial.println("How many times do you want it to flash GOAGGIES?");
+  int num = read2DigitValue();
+  for (int i = 0; i < num; i++) {
+     goaggies();
+  }
+  
+
+  // You will call the GoAggies() function from assembly file GoAggies.S
 }
 
 void decodeMorse(const String & string, char message[])
 {
-  // Write your code below.
-  // string contains the input binary string separated by single spaces
-  // message contains the decoded English characters and numbers    
-  // You will call the assembly function decode_morse()
-  int l = strlen(message[0]);
-  byte * pch
-  pch = strtok ( str, " ");
-  while (pch != NULL) {
-    val = pch;
-    width = pch
+
+  int idx = 0; // index of message
+  val = 0; // val to store input sequence
+  width = 0; // width of the sequence we give it
+  for (int i = 0; i <= string.length(); i++) {
+    if (string[i] != '\0' && string[i] != ' ' ) {
+      width++;
+      val = val * 2 + (string[i] - '0');
+    }
+    else {
+      decode_morse();
+      message[idx] = ascii;
+      idx++;
+      val = 0;
+      width = 0;
+    }
   }
-  
+
+  message[idx] = '\0';
 }
 
 
 
-void decodeMorse() 
+void decodeMorse()
 {
   Serial.println("Input a Morse code string (separate the code for characters by a space):");
 
@@ -58,17 +72,17 @@ void decodeMorse()
   Serial.print("The Morse code string is: ");
   Serial.println(string);
 
-  string = "1000 100 0"; // "01 1000";
+//  string = "1000 100 0"; // "01 1000";
   char message[100];
 
   decodeMorse(string, message);
 
-  if(strlen(message) > 0) {
+  if (strlen(message) > 0) {
     Serial.print("The decoded message is: ");
     Serial.println(message);
   } else {
     Serial.print("Failure in decoding the input Morse code\n");
-  }  
+  }
 }
 
 void setup() {
@@ -77,10 +91,10 @@ void setup() {
   //
   Serial.begin(9600);
 
-//  flashGoAggies();
+  flashGoAggies();
 
   decodeMorse();
-  
+
 }
 
 void loop() {

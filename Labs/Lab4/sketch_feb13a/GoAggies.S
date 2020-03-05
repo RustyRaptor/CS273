@@ -1,12 +1,13 @@
 
 # MorseCode.S
-# Feb 9, 2016
 
 #--------------------------------------------------------------------
     .extern delay
 #---------------------------------------------------------------------
     .text
     .global goaggies
+
+// the sequence of long and short waits for each letter we need. 
 G:
   call long
   call long
@@ -52,6 +53,7 @@ goaggies:
     call S
     ret
 
+// short wait
 short:
     ldi r16, 0x20
     ldi r17, 0x00
@@ -63,6 +65,7 @@ short:
     call wait
     ret
 
+// long delay
 long:
     ldi r16, 0x20
     ldi r17, 0x00
@@ -78,6 +81,7 @@ long:
     call wait
     ret
 
+// the amount of time we wait between each letter. 
 letter:
     call wait
     call wait
@@ -86,6 +90,8 @@ letter:
     call wait
     call wait
 
+
+// the amount of time we wait between each word.
 word:
     call wait
     call wait
@@ -102,6 +108,7 @@ word:
     call wait
     call wait
 
+// the wait delay for 1 unit.
 wait:    
     ldi R22, 160
     ldi R23, 0
