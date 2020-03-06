@@ -1,94 +1,72 @@
+/*
+  Showing number 0-9 on a Common Anode 7-segment LED display
+  Displays the numbers 0-9 on the display, with one second inbetween.
+    A
+   ---
+F |   | B
+  | G |
+   ---
+E |   | C
+  |   |
+   ---
+    D
+  This example code is in the public domain.
+ */
+ 
+// Pin 2-8 is connected to the 7 segments of the display.
+int pinA = 2;
+int pinB = 3;
+int pinC = 4;
+int pinD = 5;
+int pinE = 6;
+int pinF = 7;
+int pinG = 8;
+int D1 = 9;
+int D2 = 10;
+int D3 = 11;
+int D4 = 12;
+extern byte segment;
+extern byte digit;
 
-//
-// Declare the things that exist in our assembly code
-//
 extern "C" { 
-  void display_symbol();//will write this in display.s
-  void display_one(); 
+  void setup_ports();
+//  void select_segment();
+//  void display_segment();
+  void doit();
 }
 
-extern byte symbol1;
-extern byte symbol2;
-extern byte symbol3;
-extern byte symbol4; 
-
+//void selectseg(){
+//  select_segment();
+//  
+//}//end of selectSeg()
 //
-// Arduino-required setup function (called once)
-//
-void setup()
-{
-  //
-  // Initialize serial communications (for loop() function)
-  //
-  Serial.begin(9600);
+//void displayseg(){
+//  display_segment();
+//    
+//}//end displayseg();
 
-  while (!Serial.available()) delay(100);
-  String string = Serial.readString();
-
-  int b = 0; 
-  symbol1 = string[b]; 
-  display_one(); 
-
-  while (!Serial.available()) delay(100);
-  string = Serial.readString();
-      
-  int i = 0; 
-  int j = 1;
-  int v = 2;
-  int k = 3; 
-  while(true){
-
-  if(string[i] == '\0'){
-    i = 0; 
-    symbol1 = string[i]; 
-    i++;  
-    
-  }
-  else{
-    symbol1 = string[i]; 
-    i++; 
-  }
-
-  if(string[j] == '\0'){
-    j = 0; 
-    symbol2 = string[j];
-    j++; 
-  }
-  else{
-    symbol2 = string[j];
-    j++; 
-  }
-  if(string[v] == '\0'){
-    v = 0; 
-    symbol3 = string[v]; 
-    v++;  
-  }
-  else{
-    symbol3 = string[v]; 
-    v++; 
-  }
-  if(string[k] == '\0'){
-    k = 0; 
-    symbol4 = string[k]; 
-    k++; 
-  }
-  else{
-    symbol4 = string[k]; 
-    k++; 
-  }
-  
-   // only take the first symbol to display
-  
-  display_symbol();
-  delay(500); 
-  }
+// the setup routine runs once when you press reset:
+void setup() {                
+  // initialize the digital pins as outputs.
+//  pinMode(pinA, OUTPUT);     
+//  pinMode(pinB, OUTPUT);     
+//  pinMode(pinC, OUTPUT);     
+//  pinMode(pinD, OUTPUT);     
+//  pinMode(pinE, OUTPUT);     
+//  pinMode(pinF, OUTPUT);     
+//  pinMode(pinG, OUTPUT);   
+//  pinMode(D1, OUTPUT);  
+//  pinMode(D2, OUTPUT);  
+//  pinMode(D3, OUTPUT);  
+//  pinMode(D4, OUTPUT);  
+  setup_ports();
 }
 
-//
-// Arduino-required loop function (called infinitely)
-//
-void loop(){
+// the loop routine runs over and over again forever:
+void loop() {
+  //Tell which segment im writing to
 
-  delay(2000); // 2,000 millisecs == 2 seconds
-  Serial.println("*"); // debug output just to show we got here
+  doit();
+  delay(1000);
+ 
 }
