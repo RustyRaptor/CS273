@@ -1,73 +1,94 @@
-/*
-  Showing number 0-9 on a Common Anode 7-segment LED display
-  Displays the numbers 0-9 on the display, with one second inbetween.
-    A
-   ---
-F |   | B
-  | G |
-   ---
-E |   | C
-  |   |
-   ---
-    D
-  This example code is in the public domain.
- */
-extern  byte segment;
-extern byte digit;
-extern byte val;
-extern byte pinset;
 
+//
+// Declare the things that exist in our assembly code
+//
 extern "C" { 
-  void setup_ports();
+  void display_symbol();//will write this in display.s
+  void display_one(); 
 }
 
-extern "C" { 
-  void display_segment();
+extern byte symbol1;
+extern byte symbol2;
+extern byte symbol3;
+extern byte symbol4; 
+
+//
+// Arduino-required setup function (called once)
+//
+void setup()
+{
+  //
+  // Initialize serial communications (for loop() function)
+  //
+  Serial.begin(9600);
+
+  while (!Serial.available()) delay(100);
+  String string = Serial.readString();
+
+  int b = 0; 
+  symbol1 = string[b]; 
+  display_one(); 
+
+  while (!Serial.available()) delay(100);
+  string = Serial.readString();
+      
+  int i = 0; 
+  int j = 1;
+  int v = 2;
+  int k = 3; 
+  while(true){
+
+  if(string[i] == '\0'){
+    i = 0; 
+    symbol1 = string[i]; 
+    i++;  
+    
+  }
+  else{
+    symbol1 = string[i]; 
+    i++; 
+  }
+
+  if(string[j] == '\0'){
+    j = 0; 
+    symbol2 = string[j];
+    j++; 
+  }
+  else{
+    symbol2 = string[j];
+    j++; 
+  }
+  if(string[v] == '\0'){
+    v = 0; 
+    symbol3 = string[v]; 
+    v++;  
+  }
+  else{
+    symbol3 = string[v]; 
+    v++; 
+  }
+  if(string[k] == '\0'){
+    k = 0; 
+    symbol4 = string[k]; 
+    k++; 
+  }
+  else{
+    symbol4 = string[k]; 
+    k++; 
+  }
+  
+   // only take the first symbol to display
+  
+  display_symbol();
+  delay(500); 
+  }
 }
 
-extern "C" { 
-  void setallout();
+//
+// Arduino-required loop function (called infinitely)
+//
+void loop(){
+
+  delay(2000); // 2,000 millisecs == 2 seconds
+  Serial.println("*"); // debug output just to show we got here
 }
-
-// the setup routine runs once when you press reset:
-void setup() {                
-  // initialize the digital pins as outputs.
-
- Serial.begin(9600);
- 
- setup_ports();
-}
-
-void loop() {
-     setallout();
-}
-
-void setallout() {
-  segment=0;
-  digit=0;
-  display_segment();
-  delay(1000);
-
-  segment=1;
-  digit=1;
-  display_segment();
-  delay(1000);
-
-  segment=2;
-  digit=2;
-  display_segment();
-  delay(1000);
-
-  segment=3;
-  digit=3;
-  display_segment();
-  delay(1000);
-
-   segment=0;
-  digit=4;
-  display_segment();
-  delay(1000);
-
-  // missing  ....
- 
-} // setallout
