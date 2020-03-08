@@ -30,20 +30,19 @@ extern byte digit;
 
 extern "C" { 
   void setup_ports();
-//  void select_segment();
-//  void display_segment();
-  void doit();
+  void select_segment();
+  void display_segment();
 }
 
-//void selectseg(){
-//  select_segment();
-//  
-//}//end of selectSeg()
-//
-//void displayseg(){
-//  display_segment();
-//    
-//}//end displayseg();
+void selectseg(){
+  select_segment();
+  
+}//end of selectSeg()
+
+void displayseg(){
+  display_segment();
+    
+}//end displayseg();
 
 // the setup routine runs once when you press reset:
 void setup() {                
@@ -66,7 +65,76 @@ void setup() {
 void loop() {
   //Tell which segment im writing to
 
-  doit();
-  delay(1000);
- 
+  //0
+  segment = 0;
+  selectseg();
+  digit = 0;
+  displayseg();  
+  delay(500);               // wait for a second
+
+  //1
+  segment = 1;
+  selectseg();
+  digit = 1;
+  displayseg(); 
+  delay(500);               // wait for a second
+
+  //2
+  segment = 2;
+  selectseg();
+  digit = 2;
+  displayseg();   
+  delay(500);               // wait for a second
+
+  //3
+  segment = 3;
+  selectseg();
+  digit = 3;
+  displayseg();   
+  delay(500);               // wait for a second
+
+  //everything below this
+  
+  //4
+  segment = 0;
+  selectseg();
+  digit = 4;
+  displayseg();     
+  delay(500);               // wait for a second
+  
+  //5
+  segment = 1;
+  selectseg();
+  digit = 5;
+  displayseg();   
+  delay(500);               // wait for a second
+  
+  //6
+  segment = 2;
+  selectseg();
+  digit = 6;
+  displayseg();      
+  delay(500);               // wait for a second
+  
+  //7
+  segment = 3;
+  selectseg();
+  digit = 7;
+  displayseg();     
+  delay(500);               // wait for a second
+  
+  //8
+  segment = 0;
+  selectseg();
+  digit = 8;
+  displayseg();    
+  delay(500);               // wait for a second
+
+  //9
+  segment = 1;
+  selectseg();
+  digit = 9;
+  displayseg();     
+  delay(500);               // wait for a second
+  
 }
