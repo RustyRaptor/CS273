@@ -23,7 +23,6 @@ ret
 select_segment:
   out 0x05, R19
   out 0x0B, R19
-  
   LDS R18, segment
   cpi R18, 0
     breq SEGMENT0
@@ -33,6 +32,7 @@ select_segment:
     breq SEGMENT2
   JMP SEGMENT3
 
+// Load the correct segment bytes. 
 SEGMENT0:
   ldi R19, 0b00011100
   out 0x05, R19
@@ -74,6 +74,7 @@ show_num:
   JMP SHOW9
 
 // Display the correct digit. 
+// Will add 0b00000001 to the segment and re OUT the segment when we need G
 SHOW0:
   ldi R22, 0b11111111
   out 0x0B, R22
