@@ -230,7 +230,7 @@ sendBrightness:
 //      call  oneBit// Replace with SendByte()
 //      call  ack// Replace with SendByte()
 //      call stopBit
-      LDI R18, 0x8A
+      LDI R18, 0x8F
       call startBit
       call sendByte
       call stopBit
