@@ -53,7 +53,7 @@ TM1637Display display(CLK, DIO); // create a display object
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
 // The amount of time (in milliseconds) between tests
-#define TEST_DELAY   2000
+#define TEST_DELAY   500
 
 const uint8_t SEG_DONE[] = {
   SEG_B | SEG_C | SEG_D | SEG_E | SEG_G,           // d
@@ -68,6 +68,17 @@ const uint8_t SEG_DONE[] = {
 
 
 uint32_t delayMS;
+
+// Import Functions from asm
+extern "C" {
+  void display_symbol();
+  void sendBrightness();
+  void stopBit();
+  void startBit();
+}
+
+// share data array
+extern byte  data[];
 
 void setup() {
   Serial.begin(9600); 
@@ -140,7 +151,7 @@ void loop() {
   }
 
      int k;
-  uint8_t data[4] ;
+//  uint8_t data[4] ;
   display.setBrightness(0x0f); //LAB6 this line is removed
 
   // Selectively set different digits
@@ -160,5 +171,9 @@ void loop() {
 
   
   display.setSegments(SEG_DONE);  // LAB6 -- this line needs several changes
+  delay(TEST_DELAY);
+
+  display_symbol();
+
   delay(TEST_DELAY);
 }
