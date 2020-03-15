@@ -16,7 +16,7 @@
  *   February 2017
  *   
  *   */
-
+        
 // DHT Temperature & Humidity Sensor
 // Unified Sensor Library Example
 // Written by Tony DiCola for Adafruit Industries
@@ -75,10 +75,19 @@ extern "C" {
   void sendBrightness();
   void stopBit();
   void startBit();
+  void encodeDigit();
 }
 
 // share data array
 extern byte  data[];
+extern byte  digit;
+extern byte  result;
+
+uint8_t encode_digit(uint8_t dig) {
+  digit = dig;
+  encodeDigit();
+  return result;
+}
 
 void setup() {
   Serial.begin(9600); 
@@ -149,31 +158,27 @@ void loop() {
     Serial.println(h1);
     Serial.println(h2);
   }
-
-     int k;
-//  uint8_t data[4] ;
-  display.setBrightness(0x0f); //LAB6 this line is removed
-
+  
   // Selectively set different digits
   data[0] = H;
   data[1] = BLANK;
-  data[2] = display.encodeDigit(h1); //LAB6 this line is changed
-  data[3] = display.encodeDigit(h2); // LAB6 this line is changed
-  display.setSegments(data); //  LAB6 this line should be replaced with a call to AVR
+  data[2] = encode_digit(h1); 
+  data[3] = encode_digit(h2); 
+  display_symbol();
   delay(TEST_DELAY);
 
   data[0] = T;
   data[1] = BLANK;
-  data[2] = display.encodeDigit(t1);//LAB6 this line is changed
-  data[3] = display.encodeDigit(t2);//LAB6 this line is changed
-  display.setSegments(data); //  LAB6 this line should be replaced with a callto AVR
-  delay(TEST_DELAY);
-
-  
-  display.setSegments(SEG_DONE);  // LAB6 -- this line needs several changes
-  delay(TEST_DELAY);
-
+  data[2] = encode_digit(t1);
+  data[3] = encode_digit(t2);
   display_symbol();
+  delay(TEST_DELAY);
 
+ 
+  data[0] = encode_digit(15);
+  data[1] = BLANK;
+  data[2] = encode_digit(t1);
+  data[3] = encode_digit(t2);
+  display_symbol();
   delay(TEST_DELAY);
 }
