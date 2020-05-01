@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>CS 273 HW 11 - Ziad Arafat</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="cs-273-hw-11---ziad-arafat">CS 273 HW 11 - Ziad Arafat</h1>
+<ol>
+<li>
+<p><strong>The addresses are.</strong></p>
+<ul>
+<li>TCNT0  = 0x26 (0x46)</li>
+<li>TCCR0A = 0x24 (0x44)</li>
+<li>TCCR0B = 0x25 (0x45)</li>
+<li>OCR0A  = 0x27 (0x47)</li>
+<li>OCR0B  = 0x28 (0x48)</li>
+<li>TIMSK0 = (0x6E)</li>
+<li>TCNT1H = (0x85)</li>
+<li>TCNT1L = (0x84)</li>
+<li>TCCR1A = (0x80)</li>
+<li>TCCR1B = (0x81)</li>
+<li>TCCR1C = (0x82)</li>
+<li>OCR1AH = (0x89)</li>
+<li>OCR1AL = (0x88)</li>
+<li>OCR1BH = (0x8B)</li>
+<li>OCR1BL = (0x8A)</li>
+<li>TIMSK1 = (0x6F)</li>
+<li>TCNT2  = (0xB2)</li>
+<li>TCCR2A = (0xB0)</li>
+<li>TCCR2B = (0xB1)</li>
+<li>OCR2A  = (0xB3)</li>
+<li>OCR2B  = (0xB4)</li>
+<li>TIMSK2 = (0x70)</li>
+</ul>
+</li>
+<li>
+<p><strong>Read Section 14 Interrupts and Timers of the booklet and answer the following questions.</strong></p>
+<ol>
+<li>We can utilize resources more efficiently so our CPU doesn't have to constantly listen for a signal. Instead we offload it to a dedicated device.</li>
+<li>An array of addresses indicating the address of the code that should be executed corresponding to an interrupt signal.</li>
+<li>Because we need to ensure that none of the registers have changed in the meantime.</li>
+<li>CODE:</li>
+</ol>
+</li>
+</ol>
+<p><strong>C Code</strong></p>
+<pre><code class="language-c"><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"avr/io.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"avr/interrupt.h"</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">isr</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>)</span> </span>{
+     byte *a = <span class="hljs-number">0x200</span>;
+     byte *b = <span class="hljs-number">0x201</span>;
+
+     <span class="hljs-keyword">if</span> (*a == <span class="hljs-number">255</span>) {
+          *a = <span class="hljs-number">0</span>;
+          *b++;
+     } <span class="hljs-keyword">else</span>{
+          *a++;
+     }
+}
+</div></code></pre>
+<p><strong>ASM code</strong></p>
+<pre><code class="language-avrasm"><div><span class="hljs-symbol">timer2b:</span>
+     <span class="hljs-keyword">push</span> <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">in</span> <span class="hljs-built_in">r20</span>, <span class="hljs-built_in">sreg</span>
+     <span class="hljs-keyword">push</span> <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">push</span> <span class="hljs-built_in">r21</span> 
+     <span class="hljs-keyword">clr</span> <span class="hljs-built_in">r21</span>
+
+     <span class="hljs-keyword">lds</span> <span class="hljs-built_in">r20</span>, <span class="hljs-number">0x200</span>
+     <span class="hljs-keyword">inc</span> <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">sts</span> <span class="hljs-number">0x200</span>, <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">lds</span> <span class="hljs-built_in">r20</span>, <span class="hljs-number">0x201</span>
+     <span class="hljs-keyword">adc</span> <span class="hljs-built_in">r20</span>, <span class="hljs-built_in">r21</span>
+     <span class="hljs-keyword">sts</span> <span class="hljs-number">0x201</span>, <span class="hljs-built_in">r20</span>
+
+     <span class="hljs-keyword">pop</span> <span class="hljs-built_in">r21</span>
+     <span class="hljs-keyword">pop</span> <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">out</span> <span class="hljs-built_in">sreg</span>, <span class="hljs-built_in">r20</span>
+     <span class="hljs-keyword">pop</span> <span class="hljs-built_in">r20</span>
+</div></code></pre>
+
+    </body>
+    </html>

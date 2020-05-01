@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>HW 10 CS 273 Ziad Arafat</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="hw-10-cs-273-ziad-arafat">HW 10 CS 273 Ziad Arafat</h1>
+<ol>
+<li>
+<p>If the input clock source operates at 16 MHz, what is the TCNT1 value needed to generate a time delay of 0.5 millisecond in normal mode?</p>
+<ul>
+<li>16, 000, 000 clk/sec * 0.0005sec = 8000clk</li>
+<li>2^16 - 8000 = 0xE0C0</li>
+</ul>
+</li>
+<li>
+<p>If the clock operates at 10 MHz, what is the OCR0 value needed to generate time delay of 4 microseconds in CTC mode without any prescaler.</p>
+<ul>
+<li>10 million clocks/sec 0.000004 seconds</li>
+<li>40 clocks</li>
+<li>Value of 39</li>
+</ul>
+</li>
+<li>
+<p>Write an assembly program for Timer1 to generate a square wave of 16000 Hz to output on PB3 using a clock frequency of 16 MHz.</p>
+</li>
+</ol>
+<pre><code><code><div>16 million clk/sec = 16000 clks/sec * n
+n = 1000
+1000/2 = 500
+500 off
+500 on
+</div></code></code></pre>
+<pre><code><code><div>sbi ddrb, 5  // pb5 as an output
+start:
+     sbi portb, 3  // pb3 = 1
+     rcall  500delay
+     cbi portb, 3  // pb3 = 0
+     rcall  500delay
+     jmp  start
+
+
+500delay:
+     ldi r20, 0x01
+     out tcnt1h, r20  // temp = 0xd8
+     ldi r20, 0xf8
+     out tcnt1l, r20  // tcnt1l = 0xf0, tcnt1h = temp
+     ldi r20, 0x0
+     out tccr1a, r20  // wgm11:10=00
+     ldi r20, 0x1
+     out tccr1b, r20  // wgm13:12=00, cs=clk
+loop:
+     in r20, tifr1  // read tifr1
+     sbrs r20, tov1  // if tov1 is set skip next instruction
+     jmp loop
+     ldi r20, 1&lt;&lt;tov1 
+     out tifr1, r20  // clear tov1 flag
+     ldi r19, 0
+     out tccr1b, r19  // stop timer
+     out tccr1a, r19  // 
+
+ret
+</div></code></code></pre>
+<ol start="4">
+<li>
+<p>What is the advantage of using falling/rising edges instead of high/low voltages to detect events?</p>
+<ul>
+<li>So we can catch an event we are listening for. If we only look at 2 values we might not catch it.</li>
+</ul>
+</li>
+<li>
+<p>What is the signal the following code generates at PORTB pin 5? If it is a periodical signal, what is its period? The clock frequency is 16MHz.</p>
+</li>
+</ol>
+<pre><code><code><div>0x100 - 3B = 256 - 59 = 197 = 210 clks off and 210 clks on
+420 clks ;; nice
+</div></code></code></pre>
+
+    </body>
+    </html>
